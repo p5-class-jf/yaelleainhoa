@@ -4,14 +4,14 @@ var params = {
     size: 56,
     Gaussian_Center: 5,
     Random_Seed: 0,
-    N: 35,
+    N: 70,
     Download_Image: function () { return save(); },
 };
 gui.add(params, "size_variation", 0, 50, 1);
 gui.add(params, "size", 50, 60, 1);
 gui.add(params, "Gaussian_Center", 1, 8, 1);
 gui.add(params, "Random_Seed", 0, 100, 1);
-gui.add(params, "N", 0, 60, 1);
+gui.add(params, "N", 0, 100, 1);
 function pseudoSquare(size, variation, randomseed) {
     randomSeed(randomseed);
     translate(-size / 2, -size / 2);
@@ -33,9 +33,9 @@ function primaryMatrix(alea) {
         }
     }
 }
-function canva(alea) {
+function gaussianMatrix(alea) {
     var i = int(randomGaussian(4.5, 4));
-    var variation = [0.5, 1., 0.5, 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.];
+    var variation = [0.5, 1., 2., 1., 1., 0.5, 1., 1., 0.5, 1.];
     var variations = random(variation);
     var mid = params.Gaussian_Center;
     randomSeed(params.Random_Seed + alea);
@@ -60,28 +60,31 @@ function canva(alea) {
         }
     }
     for (var j = 1; j <= 6; j++) {
-        push();
-        translate(-params.size / 2, -params.size / 2);
-        translate(width * 0.01 * mid + 50 * (mid - 1) * random(0.97, 1.03), height * 0.02 * j + 50 * (j - 1) * random(0.98, 1.02));
-        strokeWeight(random(1));
-        for (var i_1 = 0; i_1 < params.N / 2; i_1++) {
-            beginShape();
-            vertex(random(-params.size_variation, params.size_variation), random(-params.size_variation, params.size_variation));
-            vertex(random(params.size - params.size_variation, params.size + params.size_variation), random(-params.size_variation, params.size_variation));
-            vertex(random(params.size - params.size_variation, params.size + params.size_variation), random(params.size - params.size_variation, params.size + params.size_variation));
-            vertex(random(-params.size_variation, params.size_variation), random(params.size - params.size_variation, params.size + params.size_variation));
-            endShape(CLOSE);
+        var concentration = int(random(5));
+        if (concentration % 2 == 0) {
+            for (var i_1 = 0; i_1 < params.N / 2; i_1++) {
+                push();
+                translate(-params.size / 2, -params.size / 2);
+                translate(width * 0.01 * mid + 50 * (mid - 1) * random(0.97, 1.03), height * 0.02 * j + 50 * (j - 1) * random(0.98, 1.02));
+                strokeWeight(random(1));
+                beginShape();
+                vertex(random(-params.size_variation, params.size_variation), random(-params.size_variation, params.size_variation));
+                vertex(random(params.size - params.size_variation, params.size + params.size_variation), random(-params.size_variation, params.size_variation));
+                vertex(random(params.size - params.size_variation, params.size + params.size_variation), random(params.size - params.size_variation, params.size + params.size_variation));
+                vertex(random(-params.size_variation, params.size_variation), random(params.size - params.size_variation, params.size + params.size_variation));
+                endShape(CLOSE);
+                pop();
+            }
+            if (int(random(5)) % 2 == 0) {
+                mid = params.Gaussian_Center - 1;
+            }
+            else {
+                mid = params.Gaussian_Center;
+            }
         }
-        if (mid * int(random(5)) % 2 == 0) {
-            mid = params.Gaussian_Center + 1;
-        }
-        else {
-            mid = params.Gaussian_Center;
-        }
-        pop();
     }
 }
-function canvaBis(alea) {
+function rectangleMatrix(alea) {
     var i = int(randomGaussian(4.5, 4));
     randomSeed(params.Random_Seed + alea);
     for (var n = 1; n <= params.N; n++) {
@@ -109,7 +112,7 @@ function canvaBis(alea) {
         translate(-params.size / 2, -params.size / 2);
         translate(width * 0.01 * (params.Gaussian_Center) + 50 * (params.Gaussian_Center - 1) * random(0.97, 1.03), height * 0.02 * j + 50 * (j - 1) * random(0.98, 1.02));
         strokeWeight(random(1));
-        for (var i_2 = 0; i_2 < params.N / 3; i_2++) {
+        for (var i_2 = 0; i_2 < 2 * params.N / 5; i_2++) {
             beginShape();
             vertex(random(-params.size_variation, params.size_variation), random(-params.size_variation, params.size_variation));
             vertex(random(params.size - params.size_variation, params.size + params.size_variation), random(-params.size_variation, params.size_variation));
@@ -125,15 +128,15 @@ var colorStroke = 0;
 function draw() {
     background(255);
     translate(width / 3, height / 4);
-    stroke(palette[colorStroke]);
+    stroke(0);
     noFill();
     primaryMatrix(1);
     push();
     if (value == 1) {
-        canva(1);
+        gaussianMatrix(1);
     }
     else if (value == 0) {
-        canvaBis(2);
+        rectangleMatrix(2);
     }
     pop();
 }
