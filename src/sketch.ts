@@ -151,7 +151,6 @@ function canvaBis(alea){
 
 let value=0
 let colorStroke=0
-let palette = ['#000000','#438bc3','#9ca6a9','#153238']
 
 function draw(){
     background(255);
@@ -178,9 +177,6 @@ function keyPressed() {
     }
   }
 
-  function mouseClicked(){
-      colorStroke=(colorStroke+1)%4
-  }
 
 
 // -------------------

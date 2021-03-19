@@ -122,7 +122,6 @@ function canvaBis(alea) {
 }
 var value = 0;
 var colorStroke = 0;
-var palette = ['#000000', '#438bc3', '#9ca6a9', '#153238'];
 function draw() {
     background(255);
     translate(width / 3, height / 4);
@@ -145,9 +144,6 @@ function keyPressed() {
     else if (keyCode === DOWN_ARROW) {
         value = 0;
     }
-}
-function mouseClicked() {
-    colorStroke = (colorStroke + 1) % 4;
 }
 function setup() {
     p6_CreateCanvas();
